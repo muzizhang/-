@@ -1,8 +1,29 @@
 <?php
 namespace controllers;
 
+use Gregwar\Captcha\CaptchaBuilder;
+
 class TestController extends BaseController
 {
+    //  验证码
+    public function captcha()
+    {
+        view('test/captcha');
+    }
+    public function url()
+    {
+        //  创建验证码 
+        $builder = new CaptchaBuilder;
+        $builder->build();
+        //  直接输入图片
+        header('Content-type: image/jpeg');
+        return $builder->output();
+    }
+    //  图片预览
+    public function preview()
+    {
+        view('test/preview');
+    }
     //    表单验证
     public function validate()
     {

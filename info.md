@@ -40,10 +40,17 @@
 ​    计算出总记录数
 
 ~~~sql
-    DISTINCT   用它来返回不重复记录的条数
+    concat()   将多个字符串连接成一个字符串
+
+    DISTINCT   
+               用它来返回不重复记录的条数
                用于返回唯一不同的值
 
     GROUP_CONCAT
+        语法:   group_concat([distinct] 要连接的字段 [order by 排序字段 asc/desc][separator '分隔符'])
+        功能：  将 group by 产生的同一个分组中的值连接起来，返回一个字符串结果
+
+            distinct 可以排除重复值，separator ，省略为一个逗号 
 
 
 SELECT u.username,count(DISTINCT l.id) c,l.user_id,g.path
@@ -86,4 +93,7 @@ SELECT u.username,count(DISTINCT l.id) c,l.user_id,GROUP_CONCAT(DISTINCT g.path)
 日志表
 ​    保存：    访问路径，时间，用户id
 
-    where   
+    where  
+
+
+##  图片的实时预览

@@ -118,12 +118,12 @@
                                     <th>操作</th>
                                 </tr>
                             </form>
-                            <?php foreach($data['data'] as $v): ?>
+                            <?php foreach($data['data'] as $k=>$v): ?>
                             <tr>
-                                <td class="tc"><input name="id[]" value="59" type="checkbox"></td>
+                                <td class="tc"><input name="id[]" value="<?=$v['id']?>" type="checkbox"></td>
                                 <td>
-                                    <input name="ids[]" value="59" type="hidden">
-                                    <input class="common-input sort-input" name="ord[]" value="0" type="text">
+                                    <input name="ids[]" value="<?=$v['id']?>" type="hidden">
+                                    <input class="common-input sort-input" name="ord[]" value="<?=$k+1?>" type="text">
                                 </td>
                                 <td>
                                     <?=$v['id']?>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+       <input type="file" name="file" id="">
+    </form>
+</body>
+</html>
+<script src="/js/jquery.min.js"></script>
+<script>
+    $('input[name=file]').change(function(){
+        var file = this.files[0];    // $(this)[0].files[0]
+        var url = getObjectUrl(file);
+        //  修改的时候，删除原图片
+        $(this).prev('.img_preview').remove();
+        //  在当前追加一个框
+        $(this).before('<div class="img_preview"><img src="'+url+'" width="120" height="120"></div>');
+    });
+    //  将图片路劲转换为二进制
+    function getObjectUrl(file)
+    {
+        var url = null;
+        if(window.createObjectURL != undefined)
+        {
+            url = window.createObjectUrl(file)
+        }
+        else if(window.URL != undefined)
+        {
+            url = window.URL.createObjectURL(file)
+        }
+        else if(window.webkitURL != undefined)
+        {
+            url = window.webkitURL.createObjectURL(file)
+        }
+        return url;
+    }
+</script>

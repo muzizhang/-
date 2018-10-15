@@ -1,8 +1,8 @@
 <?php
 namespace controllers;
 
-// extends BaseController
-class LogController 
+
+class LogController extends BaseController
 {
     //    用户登录数和pv
     public function pageview()

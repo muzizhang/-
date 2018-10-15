@@ -1,7 +1,7 @@
 <?php
 namespace controllers;
 
-class CategoryController
+class CategoryController extends BaseController
 {
     public function index()
     {

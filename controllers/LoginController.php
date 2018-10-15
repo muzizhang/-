@@ -1,11 +1,23 @@
 <?php
 namespace controllers;
 
+use Gregwar\Captcha\CaptchaBuilder;
+
 class LoginController extends BaseController
 {
     public function index()
     {
         view('login/login');
+    }
+    public function url()
+    {
+        //  创建验证码 
+        $builder = new CaptchaBuilder;
+        $builder->build();
+        $_SESSION['phrase'] = $builder->getPhrase();
+        //  直接输入图片
+        header('Content-type: image/jpeg');
+        $builder->output();
     }
 
     public function login()
@@ -17,6 +29,8 @@ class LoginController extends BaseController
             die('您今天已经超过三次用户名或者密码错误，请明天登录');
         if(isset($_SESSION['time']) && $_SESSION['time'] > time())
             session_destroy();
+        if(isset($_SESSION['phrase']) && $_SESSION['phrase'] != $_POST['captcha'])
+            die('验证码输入错误');
         if(isset($_SESSION['code']) && $_SESSION['code'] != $_POST['code'])
             die('验证码输入错误，请重新输入');
 
@@ -52,6 +66,7 @@ class LoginController extends BaseController
 
     public function ip()
     {
+        $_SESSION['ip'] = 1;
         if(isset($_SESSION['ip']) && $_SESSION['ip'] != $_SERVER['REMOTE_ADDR'])
         {
             echo json_encode([

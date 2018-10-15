@@ -95,7 +95,7 @@
                                 <tr>
                                     <th><i class="require-red">*</i>缩略图：</th>
                                     <td>
-                                        <img src="<?='/uploads'.$data['logo']?>" alt="" width="200"><br>
+                                        <img id='imgID' src="<?='/uploads'.$data['logo']?>" alt="" width="200"><br>
                                         <input name="smallimg" id="" type="file">
                                         <!--<input type="submit" onclick="submitForm('/jscss/admin/design/upload')" value="上传图片"/>-->
                                     </td>
@@ -126,6 +126,7 @@
 
 </html>
 <script src="/js/jquery.min.js"></script>
+<script src="/js/img_preview.js"></script>
 <script>
     //  获取二三级的分类id
     var cat2_id = "<?=$data['cat2_id']?>";

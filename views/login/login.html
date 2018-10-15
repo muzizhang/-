@@ -31,6 +31,14 @@
 						</div>
 						<div class="ececk_warning"><span>密码不能为空</span></div>
 
+						<div class="form_text_ipt" style="display:inline-block;width:100px;margin:20px 0 0 30px;">
+							<input name="captcha" type="text" placeholder="验证码">
+						</div>
+						<div style="display: inline-block;margin: 20px 0 0 45px;">
+							<img onclick="this.src=this.src" src="/login/url" alt="">
+						</div>
+						<div class="ececk_warning"><span>验证码不能为空</span></div>
+						
 						<div class="form_check_ipt">
 							<div class="left check_left">
 								<label><input name="" type="checkbox"> 下次自动登录</label>
@@ -109,8 +117,14 @@
 	$('input[name=username]').blur(function(){
 		//  获取到文本框中的值
 		var phone = $('input[name=username]').val();
+		//  判断文本框中的值是否为空
+		if(phone == '')
+			return ;
+		
+		//  如果不为空，则显示验证码
+		
 		//  判断文本框中的值，是否满足条件
-		if(!((/^1[3|4|5|8][0-9]\d{4,8}$/).test(phone)) || phone == '')
+		if(!((/^1[3|4|5|8][0-9]\d{4,8}$/).test(phone)))
 			return ;
 		
 
@@ -125,7 +139,7 @@
 					//   弹出验证码
 					//  如果是手机号，则出现验证码框
 					element.innerHTML = html;
-					$('.ececk_warning')[1].after(element);
+					$('.ececk_warning')[2].after(element);
 					//  当用户点击的时候，发送验证码
 					$('#getCode').click(function(){
 						ajax('sms',phone);
