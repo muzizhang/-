@@ -9,6 +9,13 @@ class userlog extends model
     //  取出用户的登录数
     public function loginCount()
     {
-        $stmt = $this->_pdo->prepare('SELECT user_id,path FROM {$this->table} GROUP BY user_id');
+        $stmt = $this->_pdo->prepare("SELECT u.username,count(DISTINCT l.id) c,l.user_id,GROUP_CONCAT(DISTINCT g.path) path
+                                        FROM userlog l
+                                        LEFT JOIN user u ON u.id = l.user_id
+                                        LEFT JOIN log g ON u.id = g.user_id
+                                        WHERE to_days(l.created_at) = to_days(now())
+                                        GROUP BY l.user_id");
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

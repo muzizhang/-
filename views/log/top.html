@@ -69,46 +69,27 @@
                 
                 <div class="result-content">
                     <div class="result-title">
-                        <div class="result-list">
-                            <a href="/article/insert"><i class="icon-font"></i>新增作品</a>
-                            <a id="batchDel" href="javascript:void(0)"><i class="icon-font"></i>批量删除</a>
-                            <a id="updateOrd" href="javascript:void(0)"><i class="icon-font"></i>更新排序</a>
-                        </div>
+                        <div class="result-list"></div>
                     </div>
                     <table class="result-tab" width="100%">
                         <tr>
                             <th>id</th>
-                            <th>用户名称</th>
+                            <th>访问次数</th>
                             <th>pageview</th>
-                            <th>操作</th>
                         </tr>
-                        <!-- <?php foreach($data['data'] as $v): ?>
+                        <?php foreach($data as $k=>$v): ?>
                         <tr>
-                            <td class="tc"><input name="id[]" value="59" type="checkbox"></td>
                             <td>
-                                <input name="ids[]" value="59" type="hidden">
-                                <input class="common-input sort-input" name="ord[]" value="0" type="text">
+                                <?=$k+1?>
                             </td>
                             <td>
-                                <?=$v['id']?>
-                            </td>
-                            <td title="<?=$v['title']?>"><a target="_blank" href="#" title="<?=$v['title']?>">
-                                    <?=$v['title']?></a> …
-                            </td>
-                            <td>0</td>
-                            <td>2</td>
-                            <td>
-                                <?=$v['author']?>
+                                <?=$v['c']?>
                             </td>
                             <td>
-                                <?=$v['updated_at']?>
-                            </td>
-                            <td>
-                                <a class="link-update" href="/article/modify?id=<?=$v['id']?>">修改</a>
-                                <a class="link-del" onclick="return confirm('确定要删除么？');" href="/article/delete?id=<?=$v['id']?>">删除</a>
+                                <?=$v['path']?>
                             </td>
                         </tr>
-                        <?php endforeach; ?> -->
+                        <?php endforeach; ?>
                     </table>
                     <div class="list-page">
                         <!-- <?=$data['btn']?> -->

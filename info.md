@@ -35,11 +35,55 @@
 用户登录记录表
   每次用户登录成功，记录ip，设备，浏览器  到数据库
 用户登录数    
-    where 时间
-    根据用户分组
-    计算出总记录数
+​    where 时间
+​    根据用户分组
+​    计算出总记录数
+
+~~~sql
+    DISTINCT   用它来返回不重复记录的条数
+               用于返回唯一不同的值
+
+    GROUP_CONCAT
+
+
+SELECT u.username,count(DISTINCT l.id) c,l.user_id,g.path
+	FROM userlog l
+	LEFT JOIN user u ON u.id = l.user_id
+	LEFT JOIN log g ON u.id = g.user_id
+	WHERE to_days(l.created_at) = to_days(now())
+	GROUP BY l.user_id,g.path;
+
+
+SELECT u.username,count(DISTINCT l.id) c,l.user_id,GROUP_CONCAT(DISTINCT g.path) path
+	FROM userlog l
+	LEFT JOIN user u ON u.id = l.user_id
+	LEFT JOIN log g ON u.id = g.user_id
+	WHERE to_days(l.created_at) = to_days(now())
+	GROUP BY l.user_id;
+
+
+  -- 访问今天内的所有数据
+  select * from userlog where to_days(created_at) = to_days(now());
+
+
+  --  今天用户访问的排行榜
+  SELECT count(*) c,path
+	FROM log
+	WHERE to_days(created_at) = to_days(now())
+	GROUP BY path
+	ORDER BY c desc
+~~~
+![1539594331045](assets/1539594331045.png)
+
+![1539594274351](assets/1539594274351.png)
+
+
+
+
+
+
 
 日志表
-    保存：    访问路径，时间，用户id
+​    保存：    访问路径，时间，用户id
 
     where   
