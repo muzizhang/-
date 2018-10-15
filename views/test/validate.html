@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+   <form action="">
+       <input type="text" name='username' placeholder="手机号/邮箱"> <br>
+       <input type="password" name="password" onfocus="ps()" onblur="b(password)" placeholder="请输入密码">    <br>
+       <input type="password" name="repassword" onfocus="ps()" onblur="b(repassword)" placeholder="请再次输入密码">  <br>
+       <input type="submit" value="注册">
+   </form> 
+</body>
+</html>
+<script src="/js/jquery.min.js"></script>
+<script>
+    //  判断两次输入的密码  是否一致
+    var e = document.createElement('span');
+    e.innerHTML = '';
+    function ps()
+    {
+        e.remove();
+    }
+
+    function b(password)
+    {
+        if(password.name == 'password' || password.name == 'repassword')
+        {
+            var repassword = (password.name == 'password') ? 'repassword' : 'password';
+            password = $('input[name=password]');
+            repassword = $('input[name=repassword]');
+            if(password.val() == '')
+            {
+                return ;
+            }
+            if(repassword.val() != '')
+            {
+                if(repassword.val() != password.val())
+                {
+                    e.innerHTML = "<div style='color:red;'>两次密码输入不一致</div>";
+                    repassword.after(e);
+                }
+            }
+        }
+        
+    }
+
+    /*
+        参数：
+            params:   input框的name值
+            info:     为空时的错误提示
+            Reg:      正则表达式
+            error:    手机号不合法
+    */
+    function dom(params,info,patt,error)
+    {
+        var username = $('input[name='+params+']');
+        //  创建一个元素
+        var element = document.createElement('span');
+        element.innerHTML = '';
+        //  判断文本框是否获取获取过焦点事件      focus   
+        username.focus(function(){
+            //  获取到焦点后就删除节点元素
+            element.remove();
+        });
+        //    当失去焦点的时候，获取文本框中的值     blur
+        username.blur(function(){
+            var value = $(this).val();
+            //  判断失去光标后的文本框中的值，是否为空
+            if(value == '')
+            {
+                element.innerHTML = "<span style='color:red;'>"+info+"</span>";
+            }
+            else
+            {
+                // var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+                //  判断该值是否合法
+                if(!(patt.test(value)))
+                {
+                    element.innerHTML = "<span style='color:red;'>"+error+"</span>";   
+                }
+            }
+            this.after(element);
+        });
+    }
+    var patt = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+    dom('username','手机号/邮箱不能为空',patt,'输入不合法，请重新输入');
+</script>
