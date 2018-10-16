@@ -33,11 +33,11 @@
 
 						<div class="form_text_ipt" style="display:inline-block;width:100px;margin:20px 0 0 30px;">
 							<input name="captcha" type="text" placeholder="验证码">
-						</div>
+						</div>	
+						<div class="ececk_warning"><span>验证码不能为空</span></div>
 						<div style="display: inline-block;margin: 20px 0 0 45px;">
 							<img onclick="this.src=this.src" src="/login/url" alt="">
 						</div>
-						<div class="ececk_warning"><span>验证码不能为空</span></div>
 						
 						<div class="form_check_ipt">
 							<div class="left check_left">
@@ -98,7 +98,7 @@
 </script> -->
 <script>
 	var html = `<div class="form_text_ipt" style="display:inline-block;width:100px;margin:20px 0 0 30px;">
-							<input name="code" type="text" placeholder="验证码">
+							<input name="code" type="text" placeholder="手机验证码">
 						</div>
 						<div style="display: inline-block;margin: 20px 0 0 45px;">
 							<input type="button" id="getCode" value="点击获取验证码" style="width:150px;display:inline-block;height: 40px;">
