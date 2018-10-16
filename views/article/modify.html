@@ -92,24 +92,38 @@
                                     <th>作者：</th>
                                     <td><input class="common-text" name="author" size="50" type="text" value="<?=$data['author']?>"></td>
                                 </tr>
-                                <?php foreach($img as $k=>$v): ?>
+                                
+                                <?php if($img != null):?>
+                                    <?php foreach($img as $k=>$v): ?>
+                                    <tr>
+                                        <th>
+                                            <i class="require-red">*</i>缩略图：
+                                            <br>
+                                            <?php if($k==0): ?>
+                                            <input id="btn" type="button" value="添加一张缩略图">
+                                            <?php elseif($k>0): ?>
+                                            <input style="display:none;" type="button" value="添加一张缩略图">
+                                            <?php endif; ?>
+                                        </th>
+                                        <td>
+                                            <input name="<?=$v['id']?>" type="hidden" value="<?=$v['id']?>">
+                                            <img class='imgID' src="<?='/uploads'.$v['url']?>" alt="<?=$k?>" width="200" height="200"><br>
+                                            <input class="img_preview" name="smallimg[]" id="" type="file" k="<?=$k?>">
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
                                 <tr>
                                     <th>
-                                        <i class="require-red">*</i>缩略图：
-                                        <br>
-                                        <?php if($k==0): ?>
+                                        <i class="require-red">*</i>缩略图：<br>
                                         <input id="btn" type="button" value="添加一张缩略图">
-                                        <?php elseif($k>0): ?>
-                                        <input style="display:none;" type="button" value="添加一张缩略图">
-                                        <?php endif; ?>
                                     </th>
                                     <td>
-                                        <input name="<?=$v['id']?>" type="hidden" value="<?=$v['id']?>">
-                                        <img class='imgID' src="<?='/uploads'.$v['url']?>" alt="<?=$k?>" width="200" height="200"><br>
-                                        <input class="img_preview" name="smallimg[]" id="" type="file" k="<?=$k?>">
+                                        <input class="img_preview" name="smallimg[]" id="" type="file">
                                     </td>
                                 </tr>
-                                <?php endforeach; ?>
+                                <?php endif; ?>
+                                
                                 <tr class="i">
                                     <th>内容：</th>
                                     <td>

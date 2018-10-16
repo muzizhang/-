@@ -31,58 +31,45 @@ class article extends model
             //   判断图片是否修改，如若修改则为 error  == 0
             if($_FILES['smallimg']['error'][$k] == 0)
             {
-                //  循环数据取出的数据，删除相应的数据
-                foreach($data as $a=>$b)
+                if($data != null)
                 {
-                    if($k == $a)
+                    //  循环数据取出的数据，删除相应的数据
+                    foreach($data as $a=>$b)
                     {
-                        //  删除数据
-                        @unlink(ROOT.'public/uploads'.$b['url']);
-                        @unlink(ROOT.'public/uploads'.$b['big_url']);
-                        @unlink(ROOT.'public/uploads'.$b['middle_url']);
-                        @unlink(ROOT.'public/uploads'.$b['small_url']);
-                        // 删除数据库中的数据
-                        $stmt->execute([$id,$b['id']]);
-                        //   拼出每张图片并且上传成功才处理图片
-                        //  获取图片后缀
-                        $_ext = strrchr($v,'.');
-                        //   图片名称
-                        $name = md5(time().rand(1,99999999));
-                        //   处理图片
-                        move_uploaded_file($_FILES['smallimg']['tmp_name'][$k],ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext);
-                        $bigimg = Image::make(ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext)
-                                        ->resize(650,650)
-                                        ->save(ROOT.'public/uploads/article/'.date('Ymd').'/big_'.$name.$_ext);
-                        $middleimg = Image::make(ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext)
-                                        ->resize(350,350)
-                                        ->save(ROOT.'public/uploads/article/'.date('Ymd').'/middle_'.$name.$_ext);
-                        $smallimg = Image::make(ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext)
-                                        ->resize(150,150)
-                                        ->save(ROOT.'public/uploads/article/'.date('Ymd').'/small_'.$name.$_ext);
-                        $stmt1->execute([$b['id'],"/article/".date('Ymd')."/".$name.$_ext,'/article/'.date('Ymd').'/big_'.$name.$_ext,'/article/'.date('Ymd').'/middle_'.$name.$_ext,'/article/'.date('Ymd').'/small_'.$name.$_ext,$id]);   
+                        if($k == $a)
+                        {
+                            //  删除数据
+                            $this->unlinkimg($b);
+                            // 删除数据库中的数据
+                            $stmt->execute([$id,$b['id']]);
+                            //   拼出每张图片并且上传成功才处理图片
+                            //  获取图片后缀
+                            $_ext = strrchr($v,'.');
+                            //   图片名称
+                            $name = md5(time().rand(1,99999999));
+                            //   处理图片
+                            $this->manageImg($_FILES['smallimg']['tmp_name'],$k,$name,$_ext,$id,$stmt1,$b['id']);
+                        }
+                        if($k > $a)
+                        {
+                            //   拼出每张图片并且上传成功才处理图片
+                            //  获取图片后缀
+                            $_ext = strrchr($v,'.');
+                            //   图片名称
+                            $name = md5(time().rand(1,99999999));
+                            //   处理图片
+                            $this->manageImg($_FILES['smallimg']['tmp_name'],$K,$name,$_ext,$id,$stmt1); 
+                        }
+                        break;
                     }
-                    if($k > $a)
-                    {
-                        //   拼出每张图片并且上传成功才处理图片
-                        //  获取图片后缀
-                        $_ext = strrchr($v,'.');
-                        //   图片名称
-                        $name = md5(time().rand(1,99999999));
-                        //   处理图片
-                        move_uploaded_file($_FILES['smallimg']['tmp_name'][$k],ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext);
-                        $bigimg = Image::make(ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext)
-                                        ->resize(650,650)
-                                        ->save(ROOT.'public/uploads/article/'.date('Ymd').'/big_'.$name.$_ext);
-                        $middleimg = Image::make(ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext)
-                                        ->resize(350,350)
-                                        ->save(ROOT.'public/uploads/article/'.date('Ymd').'/middle_'.$name.$_ext);
-                        $smallimg = Image::make(ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext)
-                                        ->resize(150,150)
-                                        ->save(ROOT.'public/uploads/article/'.date('Ymd').'/small_'.$name.$_ext);
-                        $stmt1->execute([null,"/article/".date('Ymd')."/".$name.$_ext,'/article/'.date('Ymd').'/big_'.$name.$_ext,'/article/'.date('Ymd').'/middle_'.$name.$_ext,'/article/'.date('Ymd').'/small_'.$name.$_ext,$id]);   
-                    }
-                    break;
                 }
+                //   拼出每张图片并且上传成功才处理图片
+                //  获取图片后缀
+                $_ext = strrchr($v,'.');
+                //   图片名称
+                $name = md5(time().rand(1,99999999));
+                //   处理图片
+                $this->manageImg($_FILES['smallimg']['tmp_name'],$k,$name,$_ext,$id,$stmt1);   
             }
         }  
         //  编辑其他信息
@@ -184,7 +171,7 @@ class article extends model
         $stmt->execute($data);
         //  文章id
         $article_id = $this->_pdo->lastInsertId();
-        $stmt = $this->_pdo->prepare("INSERT INTO article_img(url,big_url,middle_url,small_url,article_id) VALUES(?,?,?,?,?)");
+        $article = $this->_pdo->prepare("INSERT INTO article_img(id,url,big_url,middle_url,small_url,article_id) VALUES(?,?,?,?,?,?)");
         foreach($img['name'] as $k=>$v)
         {
             //  获取图片后缀
@@ -192,17 +179,7 @@ class article extends model
             //   图片名称
             $name = md5(time().rand(1,99999999));
             //   处理图片
-            move_uploaded_file($img['tmp_name'][$k],ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext);
-            $bigimg = Image::make(ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext)
-                            ->resize(650,650)
-                            ->save(ROOT.'public/uploads/article/'.date('Ymd').'/big_'.$name.$_ext);
-            $middleimg = Image::make(ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext)
-                            ->resize(350,350)
-                            ->save(ROOT.'public/uploads/article/'.date('Ymd').'/middle_'.$name.$_ext);
-            $smallimg = Image::make(ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext)
-                            ->resize(150,150)
-                            ->save(ROOT.'public/uploads/article/'.date('Ymd').'/small_'.$name.$_ext);
-            $stmt->execute(['/article/'.date('Ymd').'/'.$name.$_ext,'/article/'.date('Ymd').'/big_'.$name.$_ext,'/article/'.date('Ymd').'/middle_'.$name.$_ext,'/article/'.date('Ymd').'/small_'.$name.$_ext,$article_id]);
+            $this->manageImg($img['tmp_name'],$k,$name,$_ext,$article_id,$article);
         }
     }
 
@@ -214,10 +191,7 @@ class article extends model
         $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         foreach($data as $k=>$v)
         {
-            unlink(ROOT.'public/uploads'.$v['url']);
-            unlink(ROOT.'public/uploads'.$v['big_url']);
-            unlink(ROOT.'public/uploads'.$v['middle_url']);
-            unlink(ROOT.'public/uploads'.$v['small_url']);
+            $this->unlinkimg($v);
         }
         //  删除图片数据
         $stmt = $this->_pdo->prepare("DELETE FROM article_img WHERE article_id = ?");
@@ -225,5 +199,50 @@ class article extends model
         //  删除文章
         $stmt = $this->_pdo->prepare("DELETE FROM {$this->table} WHERE id = ?");
         $stmt->execute([$id]);
+    }
+
+    //  删除图片
+    public function unlinkimg($value)
+    {
+        unlink(ROOT.'public/uploads'.$value['url']);
+        unlink(ROOT.'public/uploads'.$value['big_url']);
+        unlink(ROOT.'public/uploads'.$value['middle_url']);
+        unlink(ROOT.'public/uploads'.$value['small_url']);
+    }
+
+    //  处理图片
+    /*
+        参数；
+            $files              上传图片的临时路径
+            $k                  循环第几个
+            $name               文件名
+            $_ext               文件后缀
+            $article_id         文章id
+            $article            处理的SQL语句
+            $id                 article_img 的id 数    
+                                默认为  null
+
+    */
+    public function manageImg($files,$k,$name,$_ext,$article_id,$stmt,$id = null)
+    {
+        //   处理图片
+        move_uploaded_file($files[$k],ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext);
+        $bigimg = Image::make(ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext)
+                        ->resize(650,650)
+                        ->save(ROOT.'public/uploads/article/'.date('Ymd').'/big_'.$name.$_ext);
+        $middleimg = Image::make(ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext)
+                        ->resize(350,350)
+                        ->save(ROOT.'public/uploads/article/'.date('Ymd').'/middle_'.$name.$_ext);
+        $smallimg = Image::make(ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext)
+                        ->resize(150,150)
+                        ->save(ROOT.'public/uploads/article/'.date('Ymd').'/small_'.$name.$_ext);
+        $stmt->execute([
+            $id,
+            "/article/".date('Ymd')."/".$name.$_ext,
+            '/article/'.date('Ymd').'/big_'.$name.$_ext,
+            '/article/'.date('Ymd').'/middle_'.$name.$_ext,
+            '/article/'.date('Ymd').'/small_'.$name.$_ext,
+            $article_id
+        ]);   
     }
 }

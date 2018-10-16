@@ -1,6 +1,8 @@
 <?php
 namespace controllers;
 
+use Intervention\Image\ImageManagerStatic as Image;
+
 class ArticleController extends BaseController
 {
     public function index()
