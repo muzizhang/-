@@ -9,9 +9,7 @@ class LogController extends BaseController
     {
         $userlog = new \models\userlog;
         $data = $userlog->loginCount();
-        // echo '<pre>';
-        // var_dump($data);
-        // die;
+
         view('log/pageview',[
             'data'=>$data,
         ]);

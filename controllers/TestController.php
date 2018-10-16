@@ -2,9 +2,17 @@
 namespace controllers;
 
 use Gregwar\Captcha\CaptchaBuilder;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class TestController extends BaseController
 {
+    //  缩略图
+    public function thumb()
+    {
+        $img = Image::make('uploads/a.jpg')->resize(300,200)->save('uploads/a1.jpg');
+        var_dump($img);
+    }
+
     //  验证码
     public function captcha()
     {

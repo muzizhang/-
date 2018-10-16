@@ -8,12 +8,9 @@ class ArticleController extends BaseController
         //  取出数据库的数据
         $article = new \models\article;
         $data = $article->findAll();
-        // echo '<pre>';
-        // var_dump($data);
-        // die;
         //  取出所有分类
-        $cate = new \models\article_category;
-        $category = $cate->findcate();
+        $cate = new \models\category;
+        $category = $cate->tree();
 
         view('article/index',[
             'data'=>$data,
@@ -64,8 +61,6 @@ class ArticleController extends BaseController
         $img = new \models\article_img;
         $img = $img->findImg($_GET['id']);
 
-        // echo "<pre>";
-        // var_dump($img);
         view('article/modify',[
             'cat1'=>$cat1,
             'data'=>$data,

@@ -31,6 +31,9 @@ create table article_img
 (
     id int unsigned not null auto_increment comment 'ID',
     url VARCHAR(255) not null comment '图片路径',
+    big_url VARCHAR(255) not null comment '大图片',
+    middle_url VARCHAR(255) not null comment '中图片',
+    small_url VARCHAR(255) not null comment '小图片',
     article_id int unsigned not null comment '文章id',
     key article_id(article_id),
     PRIMARY key (id)

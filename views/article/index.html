@@ -73,9 +73,8 @@
                                     <select name="search-sort" id="">
                                         <option value="">全部</option>
                                         <?php foreach($category as $v): ?>
-                                        <option <?php if(@$_GET['search-sort']==$v['id']) echo "selected" ;?> value="
-                                            <?=$v['id']?>">
-                                            <?=$v['cat_name']?>
+                                        <option <?php if(@$_GET['search-sort']==$v['id']) echo "selected" ;?> value="<?=$v['id']?>">
+                                            <?=$v['cate_name']?>
                                         </option>
                                         <?php endforeach; ?>
                                     </select>
