@@ -94,13 +94,15 @@
                                     <td><input class="common-text" name="author" size="50" type="text"></td>
                                 </tr>
                                 <tr>
-                                    <th><i class="require-red">*</i>缩略图：</th>
+                                    <th>
+                                        <i class="require-red">*</i>缩略图：<br>
+                                        <input id="btn" type="button" value="添加一张缩略图">
+                                    </th>
                                     <td>
-                                        <input name="smallimg" id="" type="file">
-                                        <!--<input type="submit" onclick="submitForm('/jscss/admin/design/upload')" value="上传图片"/>-->
+                                        <input class="img_preview" name="smallimg[]" id="" type="file">
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="i">
                                     <th>内容：</th>
                                     <td>
                                         <textarea name="content" class="common-textarea" id="content" cols="30" style="width: 98%;"
@@ -127,6 +129,37 @@
 </html>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/img_preview.js"></script>
+<script>
+    //  批量上传图片
+    $('#btn').click(function(){
+        var html = `
+        <tr>
+            <th>
+                <i class="require-red">*</i>缩略图：<br>
+            </th>
+            <td>
+                <input class="img_preview" name="smallimg[]" id="" type="file">
+            </td>
+        </tr>`;
+        $('.i').after(html);
+        $('.img_preview').change(function(){
+            //  获取到当前图片路径
+            var file = this.files[0];
+            //  将图片转换为二进制流
+            var url = getObjectUrl(file);
+            //  删除前一个img 框
+            var imgID = document.getElementById('imgID');
+            console.log(imgID);
+            if(imgID != null)
+                imgID.remove();
+            
+            $(this).prev('img').remove();
+            //  在input框前添加一个元素
+            $(this).before('<img src="'+url+'" width="200" height="200" />');
+        });
+    });
+    
+</script>
 <script>
     //  当下拉框中的值进行改变
     $('select[name=cat1_id').change(function () {

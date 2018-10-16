@@ -26,6 +26,16 @@ create table article
 )engine='InnoDB' comment='文章表';
 
 
+drop table if EXISTS article_img;
+create table article_img
+(
+    id int unsigned not null auto_increment comment 'ID',
+    url VARCHAR(255) not null comment '图片路径',
+    article_id int unsigned not null comment '文章id',
+    key article_id(article_id),
+    PRIMARY key (id)
+)engine='InnoDB' comment='文章图片';
+
 
 create table userLog
 (

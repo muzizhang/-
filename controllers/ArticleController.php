@@ -45,12 +45,8 @@ class ArticleController extends BaseController
     //  处理文章
     public function add()
     {
-        // echo '<pre>';
-        // var_dump($_POST);
-        // die;
         $article = new \models\article;
         $article->create();
-        die;
         redirect('/article/index');
     }
 
@@ -63,11 +59,17 @@ class ArticleController extends BaseController
 
         $article = new \models\article;
         $data = $article->findArticle($_GET['id']);
+
+        //  取出文章的图片
+        $img = new \models\article_img;
+        $img = $img->findImg($_GET['id']);
+
         // echo "<pre>";
-        // var_dump($data);
+        // var_dump($img);
         view('article/modify',[
             'cat1'=>$cat1,
             'data'=>$data,
+            'img'=>$img
         ]);
     }
 

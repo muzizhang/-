@@ -1,18 +1,23 @@
 //  实现图片预览
-$('input[name=smallimg]').change(function(){
+$('.img_preview').change(function(){
     //  获取到当前图片路径
     var file = this.files[0];
     //  将图片转换为二进制流
     var url = getObjectUrl(file);
+    //  获取value值
+    var c = $(this).attr('k');
     //  删除前一个img 框
-    var imgID = document.getElementById('imgID');
+    var imgID = document.getElementsByClassName('imgID');
     console.log(imgID);
-    if(imgID != null)
-        imgID.remove();
-    
-    $(this).prev('img').remove();
+    for(var i=0;i<imgID.length;i++)
+    {
+        if(i == c)
+            imgID[i].remove();
+    }
+
+    $(this).prev('.divImg').remove();
     //  在input框前添加一个元素
-    $(this).before('<img src="'+url+'" width="200" height="200" />');
+    $(this).before('<div class="divImg"><img class="imgID" src="'+url+'" width="200" height="200" /></div>');
 });
 function getObjectUrl(file)
 {

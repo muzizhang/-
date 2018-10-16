@@ -92,15 +92,25 @@
                                     <th>作者：</th>
                                     <td><input class="common-text" name="author" size="50" type="text" value="<?=$data['author']?>"></td>
                                 </tr>
+                                <?php foreach($img as $k=>$v): ?>
                                 <tr>
-                                    <th><i class="require-red">*</i>缩略图：</th>
+                                    <th>
+                                        <i class="require-red">*</i>缩略图：
+                                        <br>
+                                        <?php if($k==0): ?>
+                                        <input id="btn" type="button" value="添加一张缩略图">
+                                        <?php elseif($k>0): ?>
+                                        <input style="display:none;" type="button" value="添加一张缩略图">
+                                        <?php endif; ?>
+                                    </th>
                                     <td>
-                                        <img id='imgID' src="<?='/uploads'.$data['logo']?>" alt="" width="200"><br>
-                                        <input name="smallimg" id="" type="file">
-                                        <!--<input type="submit" onclick="submitForm('/jscss/admin/design/upload')" value="上传图片"/>-->
+                                        <input name="<?=$v['id']?>" type="hidden" value="<?=$v['id']?>">
+                                        <img class='imgID' src="<?='/uploads'.$v['url']?>" alt="<?=$k?>" width="200" height="200"><br>
+                                        <input class="img_preview" name="smallimg[]" id="" type="file" k="<?=$k?>">
                                     </td>
                                 </tr>
-                                <tr>
+                                <?php endforeach; ?>
+                                <tr class="i">
                                     <th>内容：</th>
                                     <td>
                                         <textarea name="content" class="common-textarea" id="content" cols="30" style="width: 98%;"
@@ -127,6 +137,42 @@
 </html>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/img_preview.js"></script>
+<script>
+    //  批量上传图片
+    $('#btn').click(function(){
+        var html = `
+        <tr>
+            <th>
+                <i class="require-red">*</i>缩略图：<br>
+            </th>
+            <td>
+                <input class="img_preview" name="smallimg[]" id="" type="file">
+            </td>
+        </tr>`;
+        $('.i').before(html);
+        $('.img_preview').change(function(){
+            //  获取到当前图片路径
+            var file = this.files[0];
+            //  将图片转换为二进制流
+            var url = getObjectUrl(file);
+            //  获取value值
+            var c = $(this).attr('k');
+            //  删除前一个img 框
+            var imgID = document.getElementsByClassName('imgID');
+            console.log(imgID);
+            for(var i=0;i<imgID.length;i++)
+            {
+                if(i == c)
+                    imgID[i].remove();
+            }
+
+            $(this).prev('.divImg').remove();
+            //  在input框前添加一个元素
+            $(this).before('<div class="divImg"><img class="imgID" src="'+url+'" width="200" height="200" /></div>');
+        });
+    });
+    
+</script>
 <script>
     //  获取二三级的分类id
     var cat2_id = "<?=$data['cat2_id']?>";

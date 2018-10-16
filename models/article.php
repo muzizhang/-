@@ -6,7 +6,6 @@ class article extends model
     protected $table = 'article';
     protected $fillable = ['title','content','user_id'];
 
-
     //  编辑
     public function edit($id)
     {
@@ -16,38 +15,56 @@ class article extends model
             $value[] = $v;
         }
         //   判断一下 图片是否有修改
-        if($_FILES['smallimg']['error'] == 0)
-        {
-            $stmt = $this->_pdo->prepare("SELECT logo FROM {$this->table} WHERE id = ?");
-            $stmt->execute([$id]);
-            $logo = $stmt->fetch(\PDO::FETCH_ASSOC);
-            //  删除原图片
-            unlink(ROOT.'public/uploads'.$logo['logo']);
+        $stmt = $this->_pdo->prepare("SELECT * FROM article_img WHERE article_id = ?");
+        $stmt->execute([$id]);
+        $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        
+        $stmt = $this->_pdo->prepare("DELETE FROM article_img WHERE article_id = ? AND id = ?");
+        
+        $stmt1 = $this->_pdo->prepare("INSERT INTO article_img(id,url,article_id) VALUES(?,?,?)");
 
-            //  接收图片
-            $img = $_FILES['smallimg'];
-            //   图片目录
-            if(!is_dir(ROOT.'public/uploads/article/'.date('Ymd')))
+        //   循环上传的图片信息
+        foreach($_FILES['smallimg']['name'] as $k=>$v)
+        {   
+            //   判断图片是否修改，如若修改则为 error  == 0
+            if($_FILES['smallimg']['error'][$k] == 0)
             {
-                mkdir(ROOT.'public/uploads/article/'.date('Ymd'),0777,true);
+                //  循环数据取出的数据，删除相应的数据
+                foreach($data as $a=>$b)
+                {
+                    if($k == $a)
+                    {
+                        //  删除数据
+                        @unlink(ROOT.'public/uploads'.$b['url']);
+                        // 删除数据库中的数据
+                        $stmt->execute([$id,$b['id']]);
+                        //   拼出每张图片并且上传成功才处理图片
+                        //  获取图片后缀
+                        $_ext = strrchr($v,'.');
+                        //   图片名称
+                        $name = md5(time().rand(1,99999999));
+                        //   处理图片
+                        move_uploaded_file($_FILES['smallimg']['tmp_name'][$k],ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext);
+                        $stmt1->execute([$b['id'],"/article/".date('Ymd')."/".$name.$_ext,$id]);   
+                    }
+                    if($k > $a)
+                    {
+                        //   拼出每张图片并且上传成功才处理图片
+                        //  获取图片后缀
+                        $_ext = strrchr($v,'.');
+                        //   图片名称
+                        $name = md5(time().rand(1,99999999));
+                        //   处理图片
+                        move_uploaded_file($_FILES['smallimg']['tmp_name'][$k],ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext);
+                        $stmt1->execute([null,"/article/".date('Ymd')."/".$name.$_ext,$id]);   
+                    }
+                    break;
+                }
             }
-            //  获取图片后缀
-            $_ext = strrchr($img['name'],'.');
-            //   图片名称
-            $name = md5(time().rand(1,99999999));
-            //   处理图片
-            move_uploaded_file($img['tmp_name'],ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext);
-            $value[] = '/article/'.date('Ymd').'/'.$name.$_ext;
-            
-            $stmt = $this->_pdo->prepare("UPDATE {$this->table} set cat1_id=?,cat2_id=?,cat3_id=?,title=?,author=?,content=?,logo=? WHERE id = {$id}");
-            $stmt->execute($value);
-        }
-        else
-        {
-            //  编辑其他信息
-            $stmt = $this->_pdo->prepare("UPDATE {$this->table} set cat1_id =?,cat2_id=?,cat3_id=?,title=?,author=?,content=? WHERE id = {$id}");
-            $stmt->execute($value);
-        }
+        }  
+        //  编辑其他信息
+        $stmt = $this->_pdo->prepare("UPDATE {$this->table} set cat1_id =?,cat2_id=?,cat3_id=?,title=?,author=?,content=? WHERE id = {$id}");
+        $stmt->execute($value);
     }
 
     //  取出一条数据
@@ -125,38 +142,54 @@ class article extends model
     //  添加数据
     public function create()
     {
+        echo '<pre>';
         //  接收图片
         $img = $_FILES['smallimg'];
+
         //   图片目录
         if(!is_dir(ROOT.'public/uploads/article/'.date('Ymd')))
         {
             mkdir(ROOT.'public/uploads/article/'.date('Ymd'),0777,true);
         }
-        //  获取图片后缀
-        $_ext = strrchr($img['name'],'.');
-        //   图片名称
-        $name = md5(time().rand(1,99999999));
-        //   处理图片
-        move_uploaded_file($img['tmp_name'],ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext);
-        // $_POST['cat_id'] = (int)$_POST['cat_id'];
-        $_POST['logo'] = '/article/'.date('Ymd').'/'.$name.$_ext;
+        
         $_POST['user_id'] = (int)$_SESSION['id'];
         static $data = [];
         foreach($_POST as $k=>$v)
         {
             $data[] = $v;
         }
-        $stmt = $this->_pdo->prepare("INSERT INTO {$this->table}(cat1_id,cat2_id,cat3_id,title,author,content,logo,user_id) VALUES(?,?,?,?,?,?,?,?)");
+        $stmt = $this->_pdo->prepare("INSERT INTO {$this->table}(cat1_id,cat2_id,cat3_id,title,author,content,user_id) VALUES(?,?,?,?,?,?,?)");
         $stmt->execute($data);
+        //  文章id
+        $article_id = $this->_pdo->lastInsertId();
+        $stmt = $this->_pdo->prepare("INSERT INTO article_img(url,article_id) VALUES(?,?)");
+        foreach($img['name'] as $k=>$v)
+        {
+            //  获取图片后缀
+            $_ext = strrchr($v,'.');
+            //   图片名称
+            $name = md5(time().rand(1,99999999));
+            //   处理图片
+            move_uploaded_file($img['tmp_name'][$k],ROOT.'public/uploads/article/'.date('Ymd').'/'.$name.$_ext);
+            $stmt->execute(['/article/'.date('Ymd').'/'.$name.$_ext,$article_id]);
+        }
     }
 
     public function delete($id)
     {
         //  取出该文章的图片路径
-        $stmt = $this->_pdo->prepare("SELECT logo FROM {$this->table} WHERE id = ?");
+        $stmt = $this->_pdo->prepare("SELECT * FROM article_img WHERE article_id = ?");
         $stmt->execute([$id]);
-        $logo = $stmt->fetch(\PDO::FETCH_ASSOC); 
-        unlink(ROOT.'public/uploads'.$logo['logo']);
+        $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        
+        foreach($data as $k=>$v)
+        {
+            unlink(ROOT.'public/uploads'.$v['url']);
+        }
+        //  删除图片数据
+        $stmt = $this->_pdo->prepare("DELETE FROM article_img WHERE article_id = ?");
+        $stmt->execute([$id]);
+        //  删除文章
         $stmt = $this->_pdo->prepare("DELETE FROM {$this->table} WHERE id = ?");
         $stmt->execute([$id]);
     }
