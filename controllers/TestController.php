@@ -6,6 +6,11 @@ use Intervention\Image\ImageManagerStatic as Image;
 
 class TestController extends BaseController
 {
+    //  点击按钮禁用
+    public function settime()
+    {
+        view('test/settime');
+    }
     //  缩略图
     public function thumb()
     {

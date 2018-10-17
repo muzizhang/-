@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 定时 -->
+    <input type="button" class="button" value="发送验证码">
+</body>
+</html>
+<script src="/js/jquery.min.js"></script>
+<script>
+    // $('.button').click(function(){
+    //     var time = 60;
+    //     setTimeout(() => {
+    //         //  修改input的value属性
+    //         // $(this).attr('value',time);
+    //         time--;
+    //         console.log(time);
+    //     }, 1000);
+        
+    // });
+    $('.button').click(function(){
+        var time = 10;
+        s = setInterval(function(){
+            time--;
+            //  修改input的value属性
+            $('.button').attr('value','剩余'+time+'秒');
+            $('.button').attr('disabled','disabled');
+            if(time == 0)
+            {
+                //  清除定时器
+                clearInterval(s);
+                $('.button').attr('value','发送验证码');
+                $('.button').attr('disabled',false);
+            }
+        },1000);
+    });
+</script>

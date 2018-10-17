@@ -117,6 +117,18 @@
 					$('.form_check_ipt').before(element);
 					//  当用户点击的时候，发送验证码
 					$('#getCode').click(function(){
+						var time = 60;
+						s = setInterval(function(){
+							time--;
+							$('#getCode').attr('value','剩余'+time+'秒');
+							$('#getCode').attr('disabled','disabled');
+							if(time==0)
+							{
+								clearInterval(s);
+								$('#getCode').attr('value','点击获取验证码');
+								$('#getCode').attr('disabled',false);
+							}
+						},1000);
 						ajax('sms',phone);
 					});
 				}

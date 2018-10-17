@@ -76,6 +76,18 @@
 	//  验证  appendChild
 
 	$('#getCode').click(function(){
+		var time = 60;
+		s = setInterval(function(){
+			time--;
+			$('#getCode').attr('value','剩余'+time+'秒');
+			$('#getCode').attr('disabled','disabled');
+			if(time==0)
+			{
+				clearInterval(s);
+				$('#getCode').attr('value','点击获取验证码');
+                $('#getCode').attr('disabled',false);
+			}
+		},1000);
 		//  获取手机号
 		var phone = $('input[name=username]').val();
 		//   判断传递的值是手机号还是邮箱
