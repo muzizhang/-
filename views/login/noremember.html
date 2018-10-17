@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div style="background: url('/img/logo_bg.jpg') no-repeat;">
+        <div style="width:200px;height:500px;margin: 0 auto;padding-top: 200px;">
+            <input type="text" name="phone" placeholder="手机号/邮箱" width="200"><br><br>
+            <input type="button" value="点击开始验证"><br><br>
+            <input type="button" class="submit" value="确定">
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script src="/js/jquery.min.js"></script>
+<script>
+    var html = `<input onblur="b(this)" type="text" width="50" name="code">
+                <img onclick="this.src=this.src" src="/login/url" alt="">`;
+    var element = document.createElement('div');
+    $('input[type=button]').click(function () {
+        // 获取name=phone 的值
+        var phone = $('input[name=phone]').val();
+        $.ajax({
+            url: '/login/phone',
+            type: 'post',
+            data: {phone: phone },
+            dataType: 'json',
+            success: function (data) {
+                if (data.status != '200') {
+                    alert('请重新输入手机号码！');
+                    return;
+                }
+                element.innerHTML = html;
+                //  如果成功，出现验证码
+                $('.submit').before(element);
+            }
+        });
+    });
+
+    //  当光标离开的时候，判断验证码是否正确
+    function b(o)
+    {
+        var code = $(o).val();
+        $.ajax({
+            url:'/login/code',
+            type:'post',
+            data:{code:code},
+            dataType:'json',
+            success:function(data)
+            {
+                if(data.status != '200')
+                {
+                    alert('验证码输入错误！');
+                    return ;
+                }
+                
+                $('.submit').click(function(){
+                    location.href = '/login/validate';
+                });
+            }
+        });
+    }
+
+  
+</script>

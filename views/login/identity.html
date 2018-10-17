@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        body {
+            color: darkseagreen;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div style="background: url('/img/logo_bg.jpg') no-repeat;">
+        <div style="width:300px;height:500px;margin: 0 auto;padding-top: 200px;">
+            <!-- 发送手机验证码 -->
+            请将App显示的动态密码填入框中<br>
+            <input type="text" name="code" width="200" placeholder="6位验证码"><br><br>
+            <input type="button" class="submit" value="确定">
+        </div>
+    </div>
+    
+</body>
+</html>
+<script src="/js/jquery.min.js"></script>
+<script>
+    //  判断页面
+    //   自动触发一个事件
+    $(function(){
+        $.ajax({
+            url:'/login/info',
+            type:'POST',
+            data:{},
+            dataType:'json',
+            success:function(data)
+            {
+                if(data.message == 'ok' && data.code == 'ok')
+                {
+                    
+                }
+            }
+        })
+    });
+
+    $('input[name=code]').blur(function(){
+        var code = $(this).val();
+        $.ajax({
+            url:'/login/password',
+            type:'POST',
+            data:{code:code},
+            dataType:'json',
+            success:function(data)
+            {
+                if(data.status == '200')
+                {
+                    $('.submit').click(function(){
+                        location.href = '/login/reset';
+                    })
+                }
+                else
+                {
+                    alert('验证码输入错误，请重新输入');
+                    location.reload();
+                }
+            }
+        });
+    });
+</script>

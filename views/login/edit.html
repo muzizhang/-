@@ -58,43 +58,11 @@
         <!--/sidebar-->
         <div class="main-wrap">
             <div class="crumb-wrap">
-                <div class="crumb-list">
-                    <i class="icon-font"></i>
-                    <a href="/">首页</a>
-                    <span class="crumb-step">&gt;</span>
-                    <span class="crumb-name">访问排行</span>
-                </div>
-
-                <div style="height: 30px;"></div>
-                
-                <div class="result-content">
-                    <div class="result-title">
-                        <div class="result-list"></div>
-                    </div>
-                    <table class="result-tab" width="100%">
-                        <tr>
-                            <th>id</th>
-                            <th>访问次数</th>
-                            <th>pageview</th>
-                        </tr>
-                        <?php foreach($data as $k=>$v): ?>
-                        <tr>
-                            <td>
-                                <?=$k+1?>
-                            </td>
-                            <td>
-                                <?=$v['c']?>
-                            </td>
-                            <td>
-                                <?=$v['path']?>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </table>
-                    <div class="list-page">
-                        <!-- <?=$data['btn']?> -->
-                    </div>
-                </div>
+                <form action="/login/doedit" method="POST">
+                    <input type="password" name="password" placeholder="原密码" style="margin-top:50px;"><br>
+                    <input type="password" name="newpassword" placeholder="新密码"><br>
+                    <input type="submit" value="确定">
+                </form>
             </div>
         </div>
         <!--/main-->

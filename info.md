@@ -100,3 +100,8 @@ SELECT u.username,count(DISTINCT l.id) c,l.user_id,GROUP_CONCAT(DISTINCT g.path)
 
 
 ##  忘记密码
+
+
+## session
+- $_SESSION['phone]   
+    - 忘记密码，设置的   /login/phone

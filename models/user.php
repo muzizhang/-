@@ -6,6 +6,43 @@ class user extends model
     protected $table = 'user';
     protected $fillable = ['password','username'];
 
+    //  忘记密码
+    public function reset($password)
+    {
+        $stmt = $this->_pdo->prepare("UPDATE {$this->table} set password = ? WHERE username = ?");
+        $stmt->execute([$password,$_SESSION['phone']]);
+    }
+
+    //   验证用户是否存在
+    public function phone($phone)
+    {
+        $stmt = $this->_pdo->prepare("SELECT count(*) FROM {$this->table} WHERE username = ?");
+        $stmt->execute([$phone]);
+        return $stmt->fetch(\PDO::FETCH_COLUMN);
+    }
+
+    //  修改密码
+    public function edit()
+    {
+        //  根据session中的id  取出数据
+        $stmt = $this->_pdo->prepare("SELECT * FROM {$this->table} WHERE id = ?");
+        $stmt->execute([$_SESSION['id']]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        //   判断原密码是否输入正确，如若正确，则更改密码
+        if($data['password'] != md5($_POST['password']))
+            return 1;
+        
+        $stmt = $this->_pdo->prepare("UPDATE {$this->table} set password = ? WHERE id = ?");
+        $stmt->execute([
+            md5($_POST['newpassword']),
+            $_SESSION['id']
+        ]);
+
+        //  清空session
+        session_destroy();
+    }
+
     //  将数据插入到userlog表中
     public function userlog($getOS,$browser,$ip)
     {
