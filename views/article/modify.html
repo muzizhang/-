@@ -44,6 +44,14 @@
                         </ul>
                     </li>
                     <li>
+                        <a href="/privilage/index"><i class="icon-font">&#xe003;</i>RBAC</a>
+                        <ul class="sub-menu">
+                            <li><a href="/privilage/index"><i class="icon-font">&#xe008;</i>权限管理</a></li>
+                            <li><a href="/role/index"><i class="icon-font">&#xe008;</i>角色管理</a></li>
+                            <li><a href="/admin/index"><i class="icon-font">&#xe008;</i>管理员管理</a></li>
+                        </ul>
+                    </li>
+                    <li>
                         <a href="#"><i class="icon-font">&#xe018;</i>系统管理</a>
                         <ul class="sub-menu">
                             <li><a href="/system/system"><i class="icon-font">&#xe017;</i>系统设置</a></li>
@@ -72,7 +80,8 @@
                                     <td>
                                         <select name="cat1_id">
                                             <?php foreach($cat1 as $v): ?>
-                                            <option <?php if($data['cat1_id'] == $v['id']) echo "selected";?> value="<?=$v['id']?>">
+                                            <option <?php if($data['cat1_id']==$v['id']) echo "selected" ;?> value="
+                                                <?=$v['id']?>">
                                                 <?=$v['cate_name']?>
                                             </option>
                                             <?php endforeach; ?>
@@ -92,26 +101,27 @@
                                     <th>作者：</th>
                                     <td><input class="common-text" name="author" size="50" type="text" value="<?=$data['author']?>"></td>
                                 </tr>
-                                
+
                                 <?php if($img != null):?>
-                                    <?php foreach($img as $k=>$v): ?>
-                                    <tr>
-                                        <th>
-                                            <i class="require-red">*</i>缩略图：
-                                            <br>
-                                            <?php if($k==0): ?>
-                                            <input id="btn" type="button" value="添加一张缩略图">
-                                            <?php elseif($k>0): ?>
-                                            <input style="display:none;" type="button" value="添加一张缩略图">
-                                            <?php endif; ?>
-                                        </th>
-                                        <td>
-                                            <input name="<?=$v['id']?>" type="hidden" value="<?=$v['id']?>">
-                                            <img class='imgID' src="<?='/uploads'.$v['url']?>" alt="<?=$k?>" width="200" height="200"><br>
-                                            <input class="img_preview" name="smallimg[]" id="" type="file" k="<?=$k?>">
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
+                                <?php foreach($img as $k=>$v): ?>
+                                <tr>
+                                    <th>
+                                        <i class="require-red">*</i>缩略图：
+                                        <br>
+                                        <?php if($k==0): ?>
+                                        <input id="btn" type="button" value="添加一张缩略图">
+                                        <?php elseif($k>0): ?>
+                                        <input style="display:none;" type="button" value="添加一张缩略图">
+                                        <?php endif; ?>
+                                    </th>
+                                    <td>
+                                        <input name="<?=$v['id']?>" type="hidden" value="<?=$v['id']?>">
+                                        <img class='imgID' src="<?='/uploads'.$v['url']?>" alt="<?=$k?>" width="200"
+                                            height="200"><br>
+                                        <input class="img_preview" name="smallimg[]" id="" type="file" k="<?=$k?>">
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
                                 <?php else: ?>
                                 <tr>
                                     <th>
@@ -123,7 +133,7 @@
                                     </td>
                                 </tr>
                                 <?php endif; ?>
-                                
+
                                 <tr class="i">
                                     <th>内容：</th>
                                     <td>
@@ -153,7 +163,7 @@
 <script src="/js/img_preview.js"></script>
 <script>
     //  批量上传图片
-    $('#btn').click(function(){
+    $('#btn').click(function () {
         var html = `
         <tr>
             <th>
@@ -164,7 +174,7 @@
             </td>
         </tr>`;
         $('.i').before(html);
-        $('.img_preview').change(function(){
+        $('.img_preview').change(function () {
             //  获取到当前图片路径
             var file = this.files[0];
             //  将图片转换为二进制流
@@ -174,70 +184,63 @@
             //  删除前一个img 框
             var imgID = document.getElementsByClassName('imgID');
             console.log(imgID);
-            for(var i=0;i<imgID.length;i++)
-            {
-                if(i == c)
+            for (var i = 0; i < imgID.length; i++) {
+                if (i == c)
                     imgID[i].remove();
             }
 
             $(this).prev('.divImg').remove();
             //  在input框前添加一个元素
-            $(this).before('<div class="divImg"><img class="imgID" src="'+url+'" width="200" height="200" /></div>');
+            $(this).before('<div class="divImg"><img class="imgID" src="' + url + '" width="200" height="200" /></div>');
         });
     });
-    
+
 </script>
 <script>
     //  获取二三级的分类id
     var cat2_id = "<?=$data['cat2_id']?>";
     var cat3_id = "<?=$data['cat3_id']?>";
     //  一级改变
-    $('select[name=cat1_id]').change(function(){
+    $('select[name=cat1_id]').change(function () {
         var value = $(this).val();
-        if(value != '')
-        {
+        if (value != '') {
             $.ajax({
-                url:'/article/cate_id?parent_id='+value,
-                type:'GET',
-                dataType:'json',
-                success:function(data)
-                {
+                url: '/article/cate_id?parent_id=' + value,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
                     var html = '';
-                    for(var i =0;i<data.length;i++)
-                    {
-                        if(data[i]['id'] == cat2_id)
-                            html += '<option selected="selected" value="'+data[i]['id']+'">'+data[i]['cate_name']+'</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i]['id'] == cat2_id)
+                            html += '<option selected="selected" value="' + data[i]['id'] + '">' + data[i]['cate_name'] + '</option>';
                         else
-                            html += '<option value="'+data[i]['id']+'">'+data[i]['cate_name']+'</option>';
+                            html += '<option value="' + data[i]['id'] + '">' + data[i]['cate_name'] + '</option>';
                     }
                     $('select[name=cat2_id]').html(html);
                     $('select[name=cat2_id]').trigger('change');
                 }
             });
         }
-        else
-        {
+        else {
             $('select[name=cat2_id]').html('');
             $('select[name=cat3_id]').html('');
         }
     });
 
-    $('select[name=cat2_id]').change(function(){
+    $('select[name=cat2_id]').change(function () {
         var value = $(this).val();
-        if(value != '')
-        {
+        if (value != '') {
             $.ajax({
-                url:'/article/cate_id?parent_id='+value,
-                type:'GET',
-                dataType:'json',
-                success:function(data){
+                url: '/article/cate_id?parent_id=' + value,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
                     var html = '';
-                    for(var i =0;i<data.length;i++)
-                    {
-                        if(data[i]['id'] == cat3_id)
-                            html += "<option selected='selected' value='"+data[i]['id']+"'>"+data[i]['cate_name']+"</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i]['id'] == cat3_id)
+                            html += "<option selected='selected' value='" + data[i]['id'] + "'>" + data[i]['cate_name'] + "</option>";
                         else
-                            html += "<option value='"+data[i]['id']+"'>"+data[i]['cate_name']+"</option>";
+                            html += "<option value='" + data[i]['id'] + "'>" + data[i]['cate_name'] + "</option>";
                     }
                     $('select[name=cat3_id]').html(html);
                 }
@@ -245,12 +248,11 @@
         }
     });
     //  触发一级的change事件，
-    $('select[name=cat1_id]').trigger('change',$('select[name=cat1_id]').val());
+    $('select[name=cat1_id]').trigger('change', $('select[name=cat1_id]').val());
 </script>
 <script>
     //  返回
-    function back()
-    {
+    function back() {
         location.href = '/article/index';
     }
 </script>

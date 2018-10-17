@@ -105,3 +105,17 @@ SELECT u.username,count(DISTINCT l.id) c,l.user_id,GROUP_CONCAT(DISTINCT g.path)
 ## session
 - $_SESSION['phone]   
     - 忘记密码，设置的   /login/phone
+
+
+
+
+
+
+
+##  RBAC
+- 角色
+    - role
+- 权限
+    - privilage
+- 管理员
+    - admin

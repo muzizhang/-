@@ -44,6 +44,14 @@
                         </ul>
                     </li>
                     <li>
+                        <a href="/privilage/index"><i class="icon-font">&#xe003;</i>RBAC</a>
+                        <ul class="sub-menu">
+                            <li><a href="/privilage/index"><i class="icon-font">&#xe008;</i>权限管理</a></li>
+                            <li><a href="/role/index"><i class="icon-font">&#xe008;</i>角色管理</a></li>
+                            <li><a href="/admin/index"><i class="icon-font">&#xe008;</i>管理员管理</a></li>
+                        </ul>
+                    </li>
+                    <li>
                         <a href="#"><i class="icon-font">&#xe018;</i>系统管理</a>
                         <ul class="sub-menu">
                             <li><a href="/system/system"><i class="icon-font">&#xe017;</i>系统设置</a></li>
@@ -131,7 +139,7 @@
 <script src="/js/img_preview.js"></script>
 <script>
     //  批量上传图片
-    $('#btn').click(function(){
+    $('#btn').click(function () {
         var html = `
         <tr>
             <th>
@@ -142,7 +150,7 @@
             </td>
         </tr>`;
         $('.i').before(html);
-        $('.img_preview').change(function(){
+        $('.img_preview').change(function () {
             //  获取到当前图片路径
             var file = this.files[0];
             //  将图片转换为二进制流
@@ -150,15 +158,15 @@
             //  删除前一个img 框
             var imgID = document.getElementById('imgID');
             console.log(imgID);
-            if(imgID != null)
+            if (imgID != null)
                 imgID.remove();
-            
+
             $(this).prev('img').remove();
             //  在input框前添加一个元素
-            $(this).before('<img src="'+url+'" width="200" height="200" />');
+            $(this).before('<img src="' + url + '" width="200" height="200" />');
         });
     });
-    
+
 </script>
 <script>
     //  当下拉框中的值进行改变

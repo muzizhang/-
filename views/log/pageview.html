@@ -44,6 +44,14 @@
                         </ul>
                     </li>
                     <li>
+                        <a href="/privilage/index"><i class="icon-font">&#xe003;</i>RBAC</a>
+                        <ul class="sub-menu">
+                            <li><a href="/privilage/index"><i class="icon-font">&#xe008;</i>权限管理</a></li>
+                            <li><a href="/role/index"><i class="icon-font">&#xe008;</i>角色管理</a></li>
+                            <li><a href="/admin/index"><i class="icon-font">&#xe008;</i>管理员管理</a></li>
+                        </ul>
+                    </li>
+                    <li>
                         <a href="#"><i class="icon-font">&#xe018;</i>系统管理</a>
                         <ul class="sub-menu">
                             <li><a href="/index/system"><i class="icon-font">&#xe017;</i>系统设置</a></li>
@@ -66,7 +74,7 @@
                 </div>
 
                 <div style="height: 30px;"></div>
-                
+
                 <div class="result-content">
                     <div class="result-title">
                         <div class="result-list">
@@ -89,15 +97,15 @@
                                 <td></td>
                                 <td></td>
                             <?php else: ?> -->
-                                <td>
-                                    <?=$v['user_id']?>
-                                </td>
-                                <td>
-                                    <?=$v['username']?>
-                                </td>
-                                <td>
-                                    <?=$v['c']?>
-                                </td>
+                            <td>
+                                <?=$v['user_id']?>
+                            </td>
+                            <td>
+                                <?=$v['username']?>
+                            </td>
+                            <td>
+                                <?=$v['c']?>
+                            </td>
                             <!-- <?php endif; ?> -->
                             <td>
                                 <?=$v['path']?>

@@ -99,3 +99,101 @@ insert into category(id,cate_name,parent_id,path) VALUES
         (18,'学习',1,'-1-'),
             (19,'成人自考',18,'-1-18-'),
             (20,'艺术',18,'-1-18-');
+
+
+
+--  RBAC
+
+-- privilage
+drop table if exists privilage;
+create table privilage
+(
+    id int unsigned not null auto_increment comment 'ID',
+    pri_url varchar(255) not null comment '权限路径',
+    pri_name VARCHAR(255) not null comment '权限名称',
+    parent_id int unsigned not null DEFAULT '0' comment '上级权限的id',
+    primary key (id) 
+)engine='InnoDB' comment='权限表';
+
+insert into privilage(id,pri_url,pri_name,parent_id) VALUES
+    (1,'/','常用操作',0),
+        (2,'/category/index','分类管理',1),
+            (3,'/category/insert','添加分类',2),
+            (4,'/category/modify','编辑分类',2),
+            (5,'/category/delete','删除分类',2),
+        (6,'/article/index','作品管理',1),
+            (7,'/article/insert','添加分类',6),
+            (8,'/article/modify','编辑分类',6),
+            (9,'/article/delete','删除分类',6),
+        (10,'/log/pageview','PV',1),
+            (11,'/log/delete','删除PV',10);
+
+        insert into role_privilage(pri_id,role_id) VALUES
+        (6,2),
+        (7,2),
+        (8,2),
+        (9,2),
+        (1,3),
+        (2,3),
+        (3,3),
+        (4,3),
+        (5,3),
+        (6,3),
+        (7,3),
+        (8,3),
+        (9,3);
+
+        insert into role(id,role_name) VALUES
+        (1,'超级管理员'),
+        (2,'作品总监'),
+        (3,'分类总监');
+
+        insert into admin_role(role_id,admin_id) VALUES
+        (1,1),
+        (3,2),
+        (2,3);
+
+        insert into admin(id,admin_name,admin_password) VALUES
+        (1,'root','21232f297a57a5a743894a0e4a801fc3'),
+        (2,'tom','21232f297a57a5a743894a0e4a801fc3'),
+        (3,'jack','21232f297a57a5a743894a0e4a801fc3');
+
+--  中间表
+drop table if exists role_privilage;
+create table role_privilage
+(
+    pri_id int unsigned not null comment '权限ID',
+    role_id int unsigned not null comment '角色ID',
+    key pri_id(pri_id),
+    key role_id(role_id)
+)engine='InnoDB' comment='角色权限表';
+
+-- role
+
+drop table if exists role;
+create table role
+(
+    id int unsigned not null auto_increment comment 'ID',
+    role_name VARCHAR(255) not null comment '角色名称',
+    primary key (id)
+)engine='InnoDB' comment="角色表";
+
+--  中间表
+drop table if exists admin_role;
+create table admin_role
+(
+    role_id int unsigned not null comment '角色ID',
+    admin_id int unsigned not null comment '管理员id',
+    key role_id(role_id),
+    key admin_id(admin_id)
+)engine='InnoDB' comment='管理角色表';
+
+-- admin
+drop TABLE if exists admin;
+create table admin
+(
+    id int unsigned not null auto_increment comment 'ID',
+    admin_name VARCHAR(255) not null comment '管理员名称',
+    admin_password VARCHAR(255) not null comment '密码',
+    primary key (id) 
+)engine='InnoDB' comment='管理员表';

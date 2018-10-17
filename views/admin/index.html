@@ -68,41 +68,19 @@
 
             <div class="crumb-wrap">
                 <div class="crumb-list"><i class="icon-font"></i><a href="/">首页</a><span class="crumb-step">&gt;</span><span
-                        class="crumb-name">作品管理</span></div>
+                        class="crumb-name">管理员管理</span></div>
             </div>
             <div class="search-wrap">
                 <div class="search-content">
                     <!-- 搜索 -->
-                    <form>
-                        <table class="search-tab">
-                            <tr>
-                                <th width="120">选择分类:</th>
-                                <td>
-                                    <select name="search-sort" id="">
-                                        <option value="">全部</option>
-                                        <?php foreach($category as $v): ?>
-                                        <option <?php if(@$_GET['search-sort']==$v['id']) echo "selected" ;?> value="<?=$v['id']?>">
-                                            <?=$v['cate_name']?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </td>
-                                <th width="70">关键字:</th>
-                                <td><input class="common-text" placeholder="关键字" name="keywords" value="<?=@$_GET['keywords']?>"
-                                        id="" type="text"></td>
-                                <td><input class="btn btn-primary btn2" name="" value="查询" type="submit"></td>
-                            </tr>
-                        </table>
-                    </form>
                 </div>
             </div>
             <div class="result-wrap">
                 <form name="myform" id="myform" method="post">
                     <div class="result-title">
                         <div class="result-list">
-                            <a href="/article/insert"><i class="icon-font"></i>新增作品</a>
+                            <a href="/admin/insert"><i class="icon-font"></i>新增管理员</a>
                             <a id="batchDel" href="javascript:void(0)"><i class="icon-font"></i>批量删除</a>
-                            <a id="updateOrd" href="javascript:void(0)"><i class="icon-font"></i>更新排序</a>
                         </div>
                     </div>
                     <div class="result-content">
@@ -110,51 +88,33 @@
                             <form>
                                 <tr>
                                     <th class="tc" width="5%"><input class="allChoose" name="" type="checkbox"></th>
-                                    <th>
-                                        排序
-                                        <!-- ?<?=GetUrlParams(['odby','odway'])?>odby=order&odway=desc -->
-                                        <a href="?<?=GetUrlParams(['odby','odway'])?>odby=created_at&odway=desc">↓</a>
-                                        <a href="?<?=GetUrlParams(['odby','odway'])?>odby=created_at&odway=asc">↑</a>
-                                    </th>
                                     <th>ID</th>
-                                    <th>标题</th>
-                                    <th>审核状态</th>
-                                    <th>点击</th>
-                                    <th>发布人</th>
-                                    <th>更新时间</th>
+                                    <th>管理员名称</th>
+                                    <th>密码</th>
                                     <th>操作</th>
                                 </tr>
                             </form>
-                            <?php foreach($data['data'] as $k=>$v): ?>
+                            <?php foreach($data as $k=>$v): ?>
                             <tr>
                                 <td class="tc"><input name="id[]" value="<?=$v['id']?>" type="checkbox"></td>
                                 <td>
-                                    <input name="ids[]" value="<?=$v['id']?>" type="hidden">
-                                    <input class="common-input sort-input" name="ord[]" value="<?=$k+1?>" type="text">
-                                </td>
-                                <td>
                                     <?=$v['id']?>
                                 </td>
-                                <td title="<?=$v['title']?>"><a target="_blank" href="#" title="<?=$v['title']?>">
-                                        <?=$v['title']?></a> …
-                                </td>
-                                <td>0</td>
-                                <td>2</td>
                                 <td>
-                                    <?=$v['author']?>
+                                    <?=$v['admin_name']?>
                                 </td>
                                 <td>
-                                    <?=$v['updated_at']?>
+                                    <?=$v['admin_password']?>
                                 </td>
                                 <td>
-                                    <a class="link-update" href="/article/modify?id=<?=$v['id']?>">修改</a>
-                                    <a class="link-del" onclick="return confirm('确定要删除么？');" href="/article/delete?id=<?=$v['id']?>">删除</a>
+                                    <a class="link-update" href="/admin/modify?id=<?=$v['id']?>">修改</a>
+                                    <a class="link-del" onclick="return confirm('确定要删除么？');" href="/admin/delete?id=<?=$v['id']?>">删除</a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
                         </table>
                         <div class="list-page">
-                            <?=$data['btn']?>
+                            <!-- <?=$data['btn']?> -->
                         </div>
                     </div>
                 </form>

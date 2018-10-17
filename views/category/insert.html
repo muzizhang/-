@@ -44,6 +44,14 @@
                         </ul>
                     </li>
                     <li>
+                        <a href="/privilage/index"><i class="icon-font">&#xe003;</i>RBAC</a>
+                        <ul class="sub-menu">
+                            <li><a href="/privilage/index"><i class="icon-font">&#xe008;</i>权限管理</a></li>
+                            <li><a href="/role/index"><i class="icon-font">&#xe008;</i>角色管理</a></li>
+                            <li><a href="/admin/index"><i class="icon-font">&#xe008;</i>管理员管理</a></li>
+                        </ul>
+                    </li>
+                    <li>
                         <a href="#"><i class="icon-font">&#xe018;</i>系统管理</a>
                         <ul class="sub-menu">
                             <li><a href="/system/system"><i class="icon-font">&#xe017;</i>系统设置</a></li>
@@ -128,48 +136,44 @@
 <script src="/js/jquery.min.js"></script>
 <script>
     //  当下拉框中的值进行改变
-    $('select[name=cat1_id').change(function(){
+    $('select[name=cat1_id').change(function () {
         //  获取到下拉框中的id
         var value = $(this).val();
-        if(value != ''){
+        if (value != '') {
             //  通过ajax请求其子级
             $.ajax({
-                url:'/category/cate_id?parent_id='+value,
-                type:'GET',
-                dataType:'json',
-                success:function(data){
+                url: '/category/cate_id?parent_id=' + value,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
                     var html = '';
-                    for(var i = 0;i<data.length;i++)
-                    {
-                        html += '<option value="'+data[i]['id']+'">'+data[i]['cate_name']+'</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        html += '<option value="' + data[i]['id'] + '">' + data[i]['cate_name'] + '</option>';
                     }
                     //  将获取到的子级追加到下拉框中
                     $('select[name=cat2_id]').html(html);
-                    $('select[name=cat2_id]').trigger('change',$('select[name=cat2_id]').val());
+                    $('select[name=cat2_id]').trigger('change', $('select[name=cat2_id]').val());
                 }
             });
         }
-        else
-        {
+        else {
             $('select[name=cat2_id]').html('');
             $('select[name=cat3_id]').html('');
         }
     });
 
     //  二级
-    $('select[name=cat2_id]').change(function(){
+    $('select[name=cat2_id]').change(function () {
         var value = $(this).val();
-        if(value != '')
-        {
+        if (value != '') {
             $.ajax({
-                url:'/category/cate_id?parent_id='+value,
-                type:"GET",
-                dataType:'json',
-                success:function(data){
+                url: '/category/cate_id?parent_id=' + value,
+                type: "GET",
+                dataType: 'json',
+                success: function (data) {
                     var html = '';
-                    for(var i = 0;i<data.length;i++)
-                    {
-                        html += '<option value="'+data[i]['id']+'">'+data[i]['cate_name']+'</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        html += '<option value="' + data[i]['id'] + '">' + data[i]['cate_name'] + '</option>';
                     }
                     $('select[name=cat3_id]').html(html);
                 }
